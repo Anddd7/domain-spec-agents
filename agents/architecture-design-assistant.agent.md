@@ -92,90 +92,39 @@ You receive three types of input. Identify which type before proceeding.
 
 ### SKILL: read-input-source
 
-Read and normalize any human-provided input — feature description, NFR document, or inline requirement.
-
-- Infer intent: feature-driven update vs. NFR input vs. direct architecture instruction.
-- If intent is ambiguous, ask the user to clarify before proceeding.
-- Output: normalized plain-text content + inferred intent.
+- Use when: a human provides inline text or file input that must be normalized and classified before architecture work starts.
+- Input: raw human input (inline text and/or file path), optional layer/context hints.
+- Output: normalized content, inferred input type/intent, and source metadata.
 
 ### SKILL: draft-system-architecture
 
-Translate domain Bounded Contexts into a system-level architecture.
-
-Steps:
-
-1. Map each Bounded Context to a candidate service. Apply Occam's Razor — merge contexts if they have no independent scaling or deployment rationale.
-2. Define inter-service communication for each dependency:
-   - Synchronous: RESTful HTTP (request/response)
-   - Asynchronous: event/message-based (fire-and-forget, pub/sub)
-3. Identify cross-cutting infrastructure: API gateway, auth service, message broker, observability stack.
-4. For each significant decision, create an ADR.
-
-Output:
-
-- `system-context.md`: Mermaid `C4Context` or `graph` diagram showing system boundary, external actors, and external systems.
-- `service-decomposition.md`: Table of services — name, owning Bounded Context, responsibility, scaling rationale.
-- `communication-map.md`: Mermaid diagram showing inter-service dependencies and communication style.
+- Use when: creating or updating system-level architecture from domain artifacts.
+- Input: domain artifacts, optional NFR analysis, optional existing system artifacts, and execution mode (`initialize` or `update`).
+- Output: system artifacts (`system-context.md`, `service-decomposition.md`, `communication-map.md`), ADR entries, and low-confidence flags.
 
 ### SKILL: draft-application-architecture
 
-Define the intra-process architecture for a single service.
-
-Steps:
-
-1. Identify standard layers for this service: API layer, domain logic layer, persistence layer, external adapters.
-2. Define framework-level standards (e.g. RESTful conventions, async patterns, error handling strategy).
-3. Define interface contracts for all intra-service and inter-service interfaces this service owns.
-4. For each significant decision, create an ADR.
-
-Output:
-
-- `component-diagram.md`: Mermaid `graph` or `C4Component` diagram showing intra-service components.
-- `interface-contracts.md`: For each interface — endpoint/event name, request/response schema, error codes, SLA.
-
-Constraints:
-
-- Do not specify language, framework version, package names, or directory structure.
-- Do not specify ORM, test framework, or build tool.
+- Use when: defining or updating service-level architecture for a specific service.
+- Input: target `service_id`, system artifacts, domain artifacts, optional NFR analysis, optional existing service artifacts, and execution mode.
+- Output: service artifacts (`component-diagram.md`, `interface-contracts.md`), ADR entries, and low-confidence flags.
 
 ### SKILL: draft-nfr-analysis
 
-Classify, map, and resolve NFR inputs.
-
-Steps:
-
-1. Classify each NFR by category: Performance / Scalability / Security / Observability / Reliability / Operability / Compliance.
-2. Map each NFR to affected architectural elements (services, components, infrastructure).
-3. Evaluate whether existing architecture satisfies the NFR.
-4. If not satisfied: propose the minimal architectural change that addresses the NFR. Create an ADR.
-5. Document traceability: NFR → architectural decision → affected artifact.
-
-Output: Updated `nfr-analysis.md` with traceability table.
+- Use when: processing explicit or implicit NFR requirements, or NFR-driven CR input.
+- Input: raw NFR text and/or CR payload, optional existing NFR analysis, optional existing architecture artifacts.
+- Output: normalized NFR entries, traceability analysis artifact (`nfr-analysis.md`), optional ADR entries, and low-confidence flags.
 
 ### SKILL: validate-architecture-consistency
 
-Before writing any artifact to disk, run all checks. If any check fails, do not write — report inline and ask how to proceed.
-
-Checks:
-
-1. **Domain term alignment:** Every service and component name maps to a `spec/domain/glossary.md` term.
-2. **Bounded Context coverage:** Every Bounded Context is accounted for in service decomposition.
-3. **NFR traceability:** Every NFR links to at least one ADR or architectural decision.
-4. **Interface contract completeness:** Every inter-service dependency has a corresponding interface contract.
-5. **No orphan services:** Every service has at least one defined consumer or producer relationship.
-6. **Chesterton check:** Every modification to an existing element includes a `reason` field.
-7. **ADR completeness:** Every ADR contains: status, context, decision, consequences.
+- Use when: performing the mandatory architecture write gate before persisting artifacts.
+- Input: domain artifacts, system artifacts, optional app artifacts, optional NFR analysis, optional ADR list.
+- Output: validation result (`pass`/`fail`) with blocking failures and warnings.
 
 ### SKILL: emit-change-request
 
-Generate a structured internal CR and write it to `spec/change-requests/`.
-
-Use this skill when:
-
-- An architectural decision creates workflow constraints → CR to Process layer.
-- A CR resolution requires domain boundary changes → CR escalated to human (not to Domain agent).
-
-Always set `type: "internal"`. Follow the `emit-change-request` skill contract.
+- Use when: architecture work discovers a cross-layer specification conflict or unresolved dependency requiring formal escalation.
+- Input: CR metadata (`type`, `from_layer`, `to_layer`) plus trigger, conflict, Chesterton context, impact, options, and recommendation.
+- Output: generated CR ID and CR file path under `spec/change-requests/`.
 
 ---
 
