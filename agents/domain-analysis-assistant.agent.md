@@ -81,79 +81,39 @@ You never treat a human feature input as an Internal Change Request, or vice ver
 
 ### SKILL: read-input-source
 
-Read and normalize any human-provided domain input.
-
-- If the user provides inline text, use it directly.
-- If the user specifies a file path, read the file and extract its text content.
-- If the input describes a new feature or business change, treat it as domain input and infer the update intent from the content — no special format is required.
-- Output: a normalized plain-text representation of the domain description or feature intent.
+- Use when: a human provides domain-related input that must be normalized before analysis.
+- Input: raw inline text and/or file path, optional layer/context hints.
+- Output: normalized content, inferred input type/intent, and source metadata.
 
 ### SKILL: draft-four-color-model
 
-Analyze the domain description and classify all identified objects using the Four-Color Model.
-
-Four color classifications:
-
-- 🔴 **Moment-Interval (MI):** Something that happens at a point in time or over a period. Usually a transaction, event, or process step. (e.g. Order, Appointment, Payment)
-- 🟡 **Role:** A way a party, place, or thing participates in a moment-interval. (e.g. Customer, Cashier, Warehouse)
-- 🔵 **Description (Desc):** A catalog entry, specification, or type that describes other objects. (e.g. ProductType, ServicePlan, PriceRule)
-- 🟢 **Party / Place / Thing (PPT):** A real-world entity that plays roles. (e.g. Person, Organization, Location, Device)
-
-Output format:
-
-1. A definition list: for each identified object, state its name, color classification, and a one-sentence definition.
-2. A Mermaid `classDiagram` showing relationships between objects, with color noted via stereotype.
+- Use when: creating or updating the domain object classification model.
+- Input: normalized domain text, optional existing four-color model.
+- Output: classified object list (with confidence metadata) and Mermaid `classDiagram` content.
 
 ### SKILL: draft-context-map
 
-Identify bounded contexts and map their relationships.
-
-Steps:
-
-1. Group domain objects and events into candidate bounded contexts based on cohesion and linguistic boundaries.
-2. For each context, state: name, responsibility, key concepts owned.
-3. For each relationship between contexts, state the relationship type using standard patterns:
-   - **Upstream / Downstream (U/D)**, **Shared Kernel (SK)**, **Customer / Supplier (CS)**
-   - **Conformist (CF)**, **Anti-Corruption Layer (ACL)**, **Open Host Service (OHS)**
-   - **Published Language (PL)**, **Separate Ways (SW)**
-
-Output format:
-
-1. A text description of each bounded context and its relationships.
-2. A Mermaid `graph` diagram showing contexts as nodes and relationships as labeled edges.
+- Use when: deriving or refining bounded contexts and context relationships from domain artifacts.
+- Input: four-color model output, normalized domain text, optional existing context map.
+- Output: context definitions, relationship list with pattern types, and Mermaid context graph.
 
 ### SKILL: maintain-domain-glossary
 
-Create and maintain the Domain Glossary.
-
-Rules:
-
-- Each entry: `**Term** — Definition (one sentence, plain language).`
-- Terms are sorted alphabetically.
-- Every concept appearing in any other artifact must have a Glossary entry.
-- No synonyms. If two terms refer to the same concept, pick one and add a deprecation note for the other.
-- If a term is being redefined, apply Chesterton's Fence: state the previous definition and the reason for the change.
+- Use when: creating or updating glossary terms from current domain artifacts.
+- Input: four-color model output, context map output, optional existing glossary.
+- Output: canonical glossary entries (including deprecation/change metadata) and full `glossary.md` content.
 
 ### SKILL: validate-domain-consistency
 
-Before writing any artifact to disk, run the following checks. If any check fails, do not write the file — report the failure inline and ask the user how to proceed.
-
-Checks:
-
-1. **Glossary coverage:** Every concept in Four-Color Model, Event Map, and Context Map has a Glossary entry.
-2. **Term consistency:** No concept appears under two different names across artifacts.
-3. **Four-Color completeness:** Every identified object has exactly one color classification.
-4. **Context boundary integrity:** Every Domain Event belongs to exactly one Bounded Context.
-5. **No orphan events:** Every Domain Event has at least one identified producer and one identified consumer.
-6. **Chesterton check:** Any modification to an existing element includes a `reason` field.
+- Use when: running the mandatory domain write gate before persisting artifacts.
+- Input: glossary, four-color model, context map, event map, and update-mode flag.
+- Output: validation status (`pass`/`fail`) and a structured validation report.
 
 ### SKILL: emit-change-request
 
-When you identify a Spec Infrastructure conflict that requires human decision, generate a structured internal Change Request file and write it to `spec/change-requests/`.
-
-You always set `type: internal`. You never use this skill to record a feature request — feature input comes from humans directly and is processed via `read-input-source`.
-
-File path: `spec/change-requests/CR-<YYYYMMDD>-<sequence>-domain.md`
+- Use when: a domain-level specification conflict requires formal cross-layer escalation.
+- Input: CR metadata (`type`, `from_layer`, `to_layer`) plus trigger, conflict, Chesterton context, impact, options, and recommendation.
+- Output: generated CR ID and CR file path under `spec/change-requests/`.
 
 ---
 
