@@ -1,17 +1,17 @@
 ---
-file: docs/agent-qa-validator.md
+file: docs/agent-validator.md
 version: 0.1.0
 layer: Execution Tier · Layer 5 — QA
 serves: QA Engineer / Tech Lead
 ---
 
-# Agent Design: QA Validator
+# Agent Design: Validator
 
 ## 1. Purpose
 
-The QA Validator is the delivery quality gate for the SpecStrata framework. It operates as a **black-box validator**: the code produced by the Dev layer is treated as an opaque artifact. The QA Validator verifies that all Story ACs are satisfied at the integration level, identifies and tests potentially affected areas beyond the immediate Story scope, and determines whether a Story — or a release — is ready to ship.
+The Validator is the delivery quality gate for the SpecStrata framework. It operates as a **black-box validator**: the code produced by the Dev layer is treated as an opaque artifact. The Validator verifies that all Story ACs are satisfied at the integration level, identifies and tests potentially affected areas beyond the immediate Story scope, and determines whether a Story — or a release — is ready to ship.
 
-The QA Validator owns:
+The Validator owns:
 
 - Test Plans (per Story and per Release)
 - Test Code (integration, E2E, contract, regression, and any performance or security tests required by Story scope)
@@ -24,11 +24,12 @@ The QA Validator owns:
 
 | Principle                            | Application                                                                                                                                                                                                                |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Black-box validation**             | The QA Validator does not read implementation code or Implementation Plans. Validation is based on Story ACs, QA-defined supplementary conditions, and observable system behavior.                                         |
+| **Black-box validation**             | The Validator does not read implementation code or Implementation Plans. Validation is based on Story ACs, QA-defined supplementary conditions, and observable system behavior.                                            |
 | **Story AC is the baseline**         | Every Story AC must be covered by at least one test case. QA may add supplementary acceptance conditions at the integration level; it may not remove or weaken Story ACs.                                                  |
 | **Impact-aware scope**               | For every Story under test, QA identifies potentially affected components and flows using architecture dependency graphs and Process layer Story relationships. Regression coverage is determined by this impact analysis. |
 | **Completeness over speed**          | A Story is not ready for release until all test cases pass and all CRs issued by QA are resolved. Partial passes do not constitute delivery.                                                                               |
 | **Direct feedback to Dev**           | When a bug is found, QA issues a CR directly to Dev. QA does not route bug reports through Process layer.                                                                                                                  |
+| **Dev owns bug triage**              | Validator reports bugs to Dev. If bug root cause appears to be ambiguous Story/procedure or missing constraints, Dev performs upstream feedback after triage.                                                              |
 | **Release is a first-class trigger** | QA supports both Story-driven testing and release-driven testing. A release test run covers all Stories changed since the last release plus full regression on impacted areas.                                             |
 
 ---
@@ -96,7 +97,7 @@ Test Plan confirmation is a hard gate. Test code generation does not begin until
 12. User or CI executes tests and provides results.
 13. Agent receives results and generates Test Report using `generate-test-report`.
 14. Agent writes Test Report to `spec/qa/reports/TESTREPORT-<story-id>-<timestamp>.md`.
-15. If failures: agent emits CR(s) to Dev using `emit-change-request`.
+15. If failures: agent emits CR(s) to Dev using `emit-bug-change-request`.
 16. If all pass: agent marks Story as QA-approved in Test Report.
 17. Agent writes propagation notice.
 
@@ -172,7 +173,7 @@ Test Plan confirmation is a hard gate. Test code generation does not begin until
 | `draft-test-plan`         | Produce a structured Test Plan from Story ACs, supplementary conditions, and impact analysis                                                         |
 | `generate-test-code`      | Generate complete test code from a confirmed Test Plan                                                                                               |
 | `generate-test-report`    | Produce a structured Test Report from execution results                                                                                              |
-| `emit-change-request`     | Generate a structured CR to Dev layer (bug report)                                                                                                   |
+| `emit-bug-change-request` | Generate a structured bug CR to Dev layer                                                                                                            |
 
 ---
 

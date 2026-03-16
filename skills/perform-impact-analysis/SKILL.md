@@ -1,8 +1,13 @@
+---
+name: perform-impact-analysis
+description: Identify full impact boundaries for story or release validation by combining architecture dependencies and process relationships. Use before drafting validator test plans.
+---
+
 # Skill: perform-impact-analysis
 
 **File:** `skills/perform-impact-analysis/SKILL.md`
 **Version:** 0.1.0
-**Used by:** QA Validator
+**Used by:** Validator
 
 ---
 
@@ -119,8 +124,8 @@ When `mode: "release"`:
 
 If the `gaps` array is non-empty:
 
-1. QA Validator presents all gaps to the user in plain language.
-2. QA Validator asks the user to resolve each gap before proceeding.
-3. QA Validator does not draft the Test Plan until all gaps are resolved or explicitly accepted by the user.
+1. Validator presents all gaps to the user in plain language.
+2. Validator asks the user to resolve each gap before proceeding.
+3. Validator does not draft the Test Plan until all gaps are resolved or explicitly accepted by the user.
 
-If the user accepts a gap without resolving it, the QA Validator notes the accepted gap in the Test Plan under a "Known Coverage Gaps" section and flags it as a warning in the Test Report.
+If the user accepts a gap without resolving it, the Validator notes the accepted gap in the Test Plan under a "Known Coverage Gaps" section and flags it as a warning in the Test Report.
