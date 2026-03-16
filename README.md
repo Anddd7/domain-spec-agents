@@ -27,7 +27,7 @@ SpecStrata organizes delivery into two tiers.
 - Specification Tier (human-led, agent-assisted)
   - Layer 1: Domain (Domain Expert + Domain Analysis Assistant)
   - Layer 2: Architecture (Architect + Architecture Design Assistant)
-  - Layer 3: Process Spec (Dev Lead + Spec Writer)
+  - Layer 3: Process Spec (Dev Lead + Process Design Assistant)
 - Execution Tier (agent-led, human-reviewed)
   - Layer 4: Developer
   - Layer 5: Validator
@@ -64,13 +64,13 @@ flowchart TB
 ```mermaid
 flowchart LR
 		DA[Domain Analysis Assistant] --> AR[Architecture Design Assistant]
-		AR --> SW[Spec Writer]
-		SW --> DV[Developer]
-		SW --> VD[Validator]
+		AR --> PDA[Process Design Assistant]
+		PDA --> DV[Developer]
+		PDA --> VD[Validator]
 		VD -. failure report .-> DV
-		DV -. change request .-> SW
-		VD -. ambiguity request .-> SW
-		SW -. architecture request .-> AR
+		DV -. change request .-> PDA
+		VD -. ambiguity request .-> PDA
+		PDA -. architecture request .-> AR
 		AR -. boundary request .-> DA
 ```
 
@@ -82,7 +82,7 @@ See [Workflow](docs/workflow.md) for detailed iteration steps and inter-layer fe
 
 - [Domain Analysis Assistant](docs/agent-domain-analysis-assistant.md): structures and evolves domain artifacts.
 - [Architecture Design Assistant](docs/agent-architecture-design-assistant.md): defines system structure, constraints, and ADRs.
-- [Spec Writer](docs/agent-spec-writer.md): converts domain + architecture intent into executable process/task specs.
+- [Process Design Assistant](docs/agent-process-design-assistant.md): converts domain + architecture intent into executable process/task specs.
 
 ### Execution Tier
 

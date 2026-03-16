@@ -8,4 +8,4 @@
 - Unit Test Design and Implementation
 - Failure Localization for Validator Feedback
 - Process Conflict Detection
-- Developer-to-Spec-Writer Change Request Authoring
+- Developer-to-Process-Design-Assistant Change Request Authoring

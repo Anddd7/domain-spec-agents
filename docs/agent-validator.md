@@ -7,4 +7,4 @@
 - End-to-End Scenario Validation
 - Pass/Fail Reporting with Failure Localization
 - Ambiguity Detection in Acceptance Criteria
-- Validator-to-Spec-Writer Change Request Authoring
+- Validator-to-Process-Design-Assistant Change Request Authoring
