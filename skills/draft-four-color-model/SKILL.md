@@ -39,12 +39,12 @@ Analyze a normalized domain description and classify all identified domain objec
 
 ## Four-Color Classification Reference
 
-| Color     | Label                       | Symbol     | Identifies                                                                        |
-| --------- | --------------------------- | ---------- | --------------------------------------------------------------------------------- |
-| 🔴 Red    | Moment-Interval (MI)        | `<<MI>>`   | Events, transactions, process steps occurring at a point in time or over a period |
-| 🟡 Yellow | Role                        | `<<Role>>` | How a party/place/thing participates in a moment-interval                         |
-| 🔵 Blue   | Description (Desc)          | `<<Desc>>` | Catalog entries, specifications, types, or rules that describe other objects      |
-| 🟢 Green  | Party / Place / Thing (PPT) | `<<PPT>>`  | Real-world entities that play roles                                               |
+| Color | Label                       | Symbol     | Identifies                                                                        |
+| ----- | --------------------------- | ---------- | --------------------------------------------------------------------------------- |
+| 🔴    | Moment-Interval (MI)        | `<<MI>>`   | Events, transactions, process steps occurring at a point in time or over a period |
+| 🟡    | Role                        | `<<Role>>` | How a party/place/thing participates in a moment-interval                         |
+| 🔵    | Description (Desc)          | `<<Desc>>` | Catalog entries, specifications, types, or rules that describe other objects      |
+| 🟢    | Party / Place / Thing (PPT) | `<<PPT>>`  | Real-world entities that play roles                                               |
 
 ---
 
@@ -70,32 +70,28 @@ Analyze a normalized domain description and classify all identified domain objec
 
 ```
 classDiagram
-  classDef mi fill:#ffe5e5,stroke:#cc0000,stroke-width:1.5px,color:#111
-  classDef role fill:#fff6cc,stroke:#c9a300,stroke-width:1.5px,color:#111
-  classDef desc fill:#e5f1ff,stroke:#1f6fb2,stroke-width:1.5px,color:#111
-  classDef ppt fill:#e7f8e7,stroke:#2e8b57,stroke-width:1.5px,color:#111
 
-  class Order {
+  class Order:::mi {
     <<MI>>
   }
-  class Customer {
+  class Customer:::role {
     <<Role>>
   }
-  class Person {
+  class Person:::ppt {
     <<PPT>>
   }
-  class ProductSpec {
+  class ProductSpec:::desc {
     <<Desc>>
   }
-
-  class Order mi
-  class Customer role
-  class Person ppt
-  class ProductSpec desc
 
   Order --> Customer : involves
   Customer --> Person : played by
   Order --> ProductSpec : follows
+
+  classDef mi fill:#ffe5e5,stroke:#cc0000,stroke-width:1.5px,color:#111
+  classDef role fill:#fff6cc,stroke:#c9a300,stroke-width:1.5px,color:#111
+  classDef desc fill:#e5f1ff,stroke:#1f6fb2,stroke-width:1.5px,color:#111
+  classDef ppt fill:#e7f8e7,stroke:#2e8b57,stroke-width:1.5px,color:#111
 ```
 
 ---
