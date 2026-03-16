@@ -76,178 +76,39 @@ You cannot read `src/` (implementation code) or `spec/dev/` (Implementation Plan
 
 ### SKILL: read-input-source
 
-Read and normalize any input — Story file, propagation notice, release scope specification, or user-provided Story ID.
-
-- Resolve Story ID to file path.
-- Resolve all referenced architecture and process artifacts.
-- If any reference cannot be resolved, ask the user before proceeding.
+- Use when: QA input must be normalized before impact analysis or test planning.
+- Input: Story/release identifiers, propagation notices, and optional layer/context hints.
+- Output: normalized content, resolved Story/architecture/process references, and source metadata.
 
 ### SKILL: perform-impact-analysis
 
-Identify the full set of components and flows potentially affected by a Story or set of Stories.
-
-**Sources:**
-
-1. Architecture dependency graph (`spec/architecture/`): which components depend on the components touched by this Story.
-2. Process Story relationships (`spec/process/`): which other Stories share modules, interfaces, or flows with this Story.
-
-**Output:** Impact boundary — a named list of components, interfaces, and flows that must be included in regression coverage.
-
-**Rules:**
-
-- The impact boundary is the union of both sources. Neither source alone is sufficient.
-- If the architecture dependency graph or Story relationships are incomplete, flag the gap to the user before proceeding.
-- For release mode: perform impact analysis across all changed Stories combined, then take the union of all impact boundaries.
+- Use when: determining regression scope for story-level or release-level validation.
+- Input: one or more Story artifacts, architecture dependency artifacts, process relationship artifacts, and analysis mode (`story` or `release`).
+- Output: impact boundary, identified analysis gaps, and summary for test-plan scoping.
 
 ### SKILL: draft-test-plan
 
-Produce a structured Test Plan from Story ACs, supplementary conditions, and impact analysis results.
-
-A Test Plan has the following structure:
-
-```markdown
-# TESTPLAN-<story-id | release-version>: <Title>
-
-**Story / Release:** STORY-<id> | Release <version>
-**Mode:** story | release
-**Version:** <semver>
-**Status:** Draft | Confirmed | Superseded
-
-## Validation Baseline
-
-<List of Story ACs being validated. Copied verbatim from Story — not paraphrased.>
-
-## Supplementary Acceptance Conditions
-
-<QA-defined conditions beyond Story ACs. Each entry:
-
-- Condition: what must be true
-- Rationale: why this condition is necessary at the integration level
-- Type: functional | contract | regression | performance | security>
-
-## Impact Boundary
-
-<Components and flows identified by impact analysis.
-Each entry:
-
-- Component / flow name
-- Source: architecture-dependency | story-relationship | both
-- Regression coverage required: yes | no (with rationale if no)>
-
-## Test Cases
-
-<For each Story AC and supplementary condition:
-
-- Test case ID: TC-<n>
-- Covers: AC-<n> | Supplementary-<n>
-- Type: functional | e2e | contract | regression | performance | security
-- Preconditions
-- Steps
-- Expected result
-- Pass criteria>
-
-## Completion Criteria
-
-- All test cases status: pass
-- No open CRs issued by this Test Plan
-- [For release mode] All Stories in release scope are QA-approved
-```
-
-**Rules:**
-
-- Every Story AC must be covered by at least one test case.
-- Every supplementary condition must be covered by at least one test case.
-- Every component in the impact boundary marked "regression coverage required: yes" must be covered by at least one regression test case.
-- Test types are determined by Story content — see test scope rules below.
-- Completion Criteria section is mandatory.
-
-**Test type selection rules:**
-| Story contains | Test types to include |
-|----------------|-----------------------|
-| Functional requirement | Functional integration test, E2E test |
-| API / service interaction | Contract test |
-| Shared module or cross-Story dependency | Regression test |
-| Explicit performance requirement | Performance test |
-| Explicit security requirement | Security test |
-
-Do not add performance or security test cases unless the Story explicitly requires them. At release scope, apply performance and security tests if any Story in the release includes such requirements.
+- Use when: building a story or release test plan after impact analysis.
+- Input: Story AC baseline, supplementary acceptance conditions, impact boundary, and mode (`story` or `release`).
+- Output: `TESTPLAN-<id>.md` draft with test cases and completion criteria.
 
 ### SKILL: generate-test-code
 
-Generate complete, executable test code from a confirmed Test Plan.
-
-**Rules:**
-
-- Follow the Test Plan exactly. Do not add test cases not in the Plan.
-- Generate tests organized by type: `tests/integration/`, `tests/e2e/`, `tests/contract/`, `tests/regression/`, `tests/performance/`, `tests/security/`.
-- Each test case in the Plan maps to exactly one test function or test block in code.
-- Test IDs (TC-<n>) must appear as comments or annotations in test code for traceability.
-- Tests must be executable without access to implementation code — black-box only.
-- Do not generate test code for any test case blocked by an open CR.
+- Use when: generating executable QA tests from a confirmed test plan.
+- Input: confirmed test plan, target test directories by test type, and blocker metadata.
+- Output: black-box test code mapped one-to-one to test cases, with TC traceability markers.
 
 ### SKILL: generate-test-report
 
-Produce a structured Test Report from execution results provided by user or CI.
-
-A Test Report has the following structure:
-
-```markdown
-# TESTREPORT-<story-id | release-version>-<timestamp>: <Title>
-
-**Test Plan:** TESTPLAN-<id>
-**Executed:** <timestamp>
-**Environment:** <environment description>
-**Executed by:** <user | CI>
-
-## Summary
-
-| Total | Pass | Fail | Blocked |
-| ----- | ---- | ---- | ------- |
-| <n>   | <n>  | <n>  | <n>     |
-
-## Results by Test Case
-
-| TC ID  | Type   | Status                  | CR ID (if fail) | Notes   |
-| ------ | ------ | ----------------------- | --------------- | ------- |
-| TC-<n> | <type> | pass \| fail \| blocked | CR-<id>         | <notes> |
-
-## Blocked Cases
-
-<For each blocked test case:
-
-- TC-<n>: <reason for block>>
-
-## CRs Issued
-
-<For each failed test case:
-
-- CR-<id>: TC-<n> — <bug description>>
-
-## Delivery Status
-
-**ready for release** | **blocked**
-<Rationale: all pass / N failures / N blocked>
-```
+- Use when: turning execution results into a formal QA report.
+- Input: test plan identifier, execution metadata (time/environment/executor), and per-test-case results.
+- Output: `TESTREPORT-<id>-<timestamp>.md` with summary, case-level results, CR references, and delivery status.
 
 ### SKILL: emit-bug-change-request
 
-Generate a structured CR to Dev layer for each failed test case.
-
-Each CR contains:
-
-- Failing test case ID (TC-<n>)
-- Test Plan reference (TESTPLAN-<id>)
-- Story AC or supplementary condition being violated
-- Observed behavior
-- Expected behavior
-- Reproduction steps (from test case preconditions and steps)
-- Severity: critical | high | medium | low
-
-Always set `type: "bug"`, `from_layer: "qa"`, `to_layer: "dev"`.
-
-One CR per distinct bug. Multiple failing test cases caused by the same root cause may be grouped into one CR with all TC IDs listed.
-
-If the bug appears to be caused by ambiguous Story/procedure or missing constraints, include a `possible_root_cause` note in the CR so Dev can triage and escalate upstream when needed.
+- Use when: failed QA test cases require direct bug feedback to Dev.
+- Input: bug CR metadata (`type`, `from_layer`, `to_layer`) plus test plan/case references, observed vs expected behavior, reproduction steps, and severity.
+- Output: generated bug CR ID and file path under `spec/change-requests/`.
 
 ---
 
