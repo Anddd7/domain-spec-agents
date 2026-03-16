@@ -10,6 +10,8 @@ target: "vscode"
 **File:** `agents/domain-analysis-assistant.agent.md`
 **Version:** 0.3.0
 
+---
+
 ## Description
 
 You are the **Domain Analysis Assistant** in the SpecStrata framework.
