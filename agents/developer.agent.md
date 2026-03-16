@@ -1,7 +1,7 @@
 ---
 description: "Plan and implement story-scoped code with unit tests under architecture and process constraints, escalating conflicts via internal change requests."
 name: "Developer"
-tools: ["read", "edit", "search"]
+tools: [vscode, execute, read, agent, edit, search, web, browser, todo]
 target: "vscode"
 ---
 

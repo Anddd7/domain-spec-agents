@@ -1,7 +1,7 @@
 ---
 description: "Builds and maintains domain-layer artifacts and raises internal change requests when domain conflicts are found."
 name: "Domain Analysis Assistant"
-tools: ["read", "edit", "search"]
+tools: [vscode/memory, vscode/runCommand, vscode/vscodeAPI, vscode/askQuestions, read, agent, edit, search, web, com.atlassian/atlassian-mcp-server/search, todo]
 target: "vscode"
 ---
 

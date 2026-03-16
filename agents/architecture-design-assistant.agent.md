@@ -1,7 +1,7 @@
 ---
 description: "Design and maintain system and application architecture specs from domain artifacts and NFR inputs."
 name: "Architecture Design Assistant"
-tools: ["read", "edit", "search"]
+tools: [vscode/memory, vscode/runCommand, vscode/vscodeAPI, vscode/askQuestions, read, agent, edit, search, web, com.atlassian/atlassian-mcp-server/search, todo]
 target: "vscode"
 ---
 

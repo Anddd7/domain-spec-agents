@@ -1,7 +1,7 @@
 ---
 description: "Validate story and release quality via black-box testing, produce test plans/reports, and emit bug CRs directly to Dev."
 name: "Validator"
-tools: ["read", "edit", "search"]
+tools: [vscode, execute, read, agent, edit, search, web, browser, todo]
 target: "vscode"
 ---
 

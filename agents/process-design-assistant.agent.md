@@ -1,7 +1,7 @@
 ---
 description: "Design and maintain process-layer procedures and stories with architecture traceability and consistency checks."
 name: "Process Design Assistant"
-tools: ["read", "edit", "search"]
+tools: [vscode/memory, vscode/runCommand, vscode/vscodeAPI, vscode/askQuestions, read, agent, edit, search, web, com.atlassian/atlassian-mcp-server/search, todo]
 target: "vscode"
 ---
 

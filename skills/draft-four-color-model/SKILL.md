@@ -70,7 +70,6 @@ Analyze a normalized domain description and classify all identified domain objec
 
 ```
 classDiagram
-
   class Order:::mi {
     <<MI>>
   }
