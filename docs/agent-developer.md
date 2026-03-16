@@ -5,16 +5,16 @@ layer: Execution Tier · Layer 4 — Dev
 serves: Developer
 ---
 
-# Agent Design: Dev Assistant
+# Agent Design: Developer
 
 ## 1. Purpose
 
-The Dev Assistant takes confirmed Stories as its primary input and produces two artifacts:
+The Developer takes confirmed Stories as its primary input and produces two artifacts:
 
 - **Implementation Plan:** A structured technical plan that translates Story ACs into ordered implementation steps, technical decisions, and a unit test plan.
 - **Code:** Complete, executable business logic code generated from the Implementation Plan, including unit tests.
 
-The Dev Assistant operates strictly within the constraints defined by Architecture layer (principles, component boundaries, interface contracts) and Process layer (procedures, module interaction order). Technical decisions that conflict with these constraints are escalated via CR.
+The Developer operates strictly within the constraints defined by Architecture layer (principles, component boundaries, interface contracts) and Process layer (procedures, module interaction order). Technical decisions that conflict with these constraints are escalated via CR.
 
 ---
 
@@ -27,6 +27,7 @@ The Dev Assistant operates strictly within the constraints defined by Architectu
 | **Architecture and process are guardrails** | Dev agent makes autonomous technical decisions (patterns, error handling, validation placement, library selection) unless they conflict with architectural principles or component interaction contracts.                                                                                                                                                                                              |
 | **Unit tests are part of done**             | Unit tests are not optional. They are produced alongside business logic code as part of the same delivery.                                                                                                                                                                                                                                                                                             |
 | **Escalate, don't workaround**              | If a Story AC cannot be implemented within current architectural or process constraints, the Dev agent emits a CR rather than finding a workaround.                                                                                                                                                                                                                                                    |
+| **Bug first fixed in Dev**                  | Validator bug CRs are handled by Dev first. Dev escalates only when root cause is ambiguous Story/procedure or upstream constraint gaps.                                                                                                                                                                                                                                                               |
 | **Chesterton's Fence**                      | Before modifying existing code or plans, surface what depends on the artifact and why it was written that way.                                                                                                                                                                                                                                                                                         |
 | **SOLID**                                   | All code adheres to the five SOLID principles. Single Responsibility: each class or module has one reason to change. Open/Closed: open for extension, closed for modification. Liskov Substitution: subtypes are substitutable for their base types. Interface Segregation: interfaces are narrow and role-specific. Dependency Inversion: high-level modules depend on abstractions, not concretions. |
 | **Clean Code**                              | Code is written for the next reader, not just the runtime. Names are intention-revealing. Functions do one thing. Side effects are explicit. Magic values are named constants. Dead code is not committed.                                                                                                                                                                                             |
@@ -197,7 +198,7 @@ This signals QA and Security layers that implementation has changed.
 
 ## 9. Technical Decision Autonomy
 
-The Dev agent may make the following decisions autonomously (without CR or escalation):
+The Developer may make the following decisions autonomously (without CR or escalation):
 
 | Decision type                         | Constraint                                                                     |
 | ------------------------------------- | ------------------------------------------------------------------------------ |
