@@ -1,11 +1,11 @@
-# Agent Design: Architecture Design Assistant
-
-**File:** `design/agent-architecture-design-assistant.md`
-**Version:** 0.1.0
-**Layer:** Specification Tier · Layer 2 — Architecture
-**Serves:** Architecture Designer / Tech Lead
-
 ---
+file: docs/agent-architecture-design-assistant.md
+version: 0.1.0
+layer: Specification Tier · Layer 2 — Architecture
+serves: Architect / Tech Lead
+---
+
+# Agent Design: Architecture Design Assistant
 
 ## 1. Purpose
 
