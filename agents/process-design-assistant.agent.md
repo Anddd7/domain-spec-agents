@@ -95,121 +95,33 @@ You can perform the following actions:
 
 ### SKILL: read-input-source
 
-Read and normalize any human-provided input.
-
-- Infer intent: procedure initialization / new procedure / feature description / project structure description.
-- If intent is ambiguous, ask the user before proceeding.
+- Use when: human-provided process input must be normalized and intent-classified before UC routing.
+- Input: raw inline text and/or file path, optional layer/context hints.
+- Output: normalized content, inferred input type/intent, and source metadata.
 
 ### SKILL: draft-procedure
 
-Draft or update a procedure entry.
-
-A procedure has the following structure:
-
-```markdown
-# PROC-<id>: <Name>
-
-**Version:** <semver>
-**Status:** Active | Deprecated
-**Applies to:** <service-id or "cross-service">
-
-## When to Use
-
-<Describe the scenario and preconditions that make this procedure applicable.
-What kind of change triggers this procedure? What must already be true before starting?>
-
-## Modules and Architecture References
-
-<List the architectural components involved, in interaction order.
-Reference the relevant architecture artifacts (component diagram, interface contracts, ADR).
-Describe the interaction direction and purpose — not implementation details.>
-
-## Steps
-
-<Ordered list of high-level operations.
-Focus on: which module is acted on, what kind of action, what the expected state change is.
-No pseudocode. No framework-specific instructions.>
-
-## Verification
-
-<How to confirm the procedure was executed correctly.
-Include: what tests to run, what pipeline stages to pass, what observable outcomes to check.
-Reference specific test categories (unit, integration, contract) without specifying test framework.>
-
-## Related Procedures
-
-<List any procedures that are commonly used before, after, or alongside this one.>
-```
-
-Rules:
-
-- Steps describe module interactions and state changes, not code.
-- Pseudocode is a last resort — use plain language descriptions of interactions first.
-- Every procedure references at least one architecture artifact.
+- Use when: creating a new procedure or updating an existing procedure definition.
+- Input: normalized procedure intent, relevant architecture artifacts, optional existing procedure entry.
+- Output: procedure draft in `PROC-<id>` format with architecture references and verification section.
 
 ### SKILL: draft-stories
 
-Decompose a feature into Stories.
-
-A Story has the following structure:
-
-```markdown
-# STORY-<id>: <Title>
-
-**Status:** Draft | Ready | In Progress | Done
-**Service:** <service-id>
-
-## User Value
-
-As a <role>, I want <capability>, so that <outcome>.
-
-## Acceptance Criteria
-
-<Numbered list of verifiable conditions.
-Each AC must specify: given what input / state, when what action, then what observable output / state change.
-ACs are the contract between Process layer and Dev layer.>
-
-## Architecture References
-
-<Link to relevant service component diagram, interface contracts, ADR.
-Specify which components are in scope for this story.>
-
-## Procedure References
-
-<List PROC-<id> entries that apply to this story.
-These are the rules the developer follows when implementing.>
-
-## Dependencies
-
-<List STORY-<id> entries that must be completed before this story can begin.
-If none, state "None".>
-
-## Out of Scope
-
-<Explicit list of what this story does not include.
-This is mandatory — if scope is unclear, do not write the story until clarified.>
-```
-
-Rules:
-
-- Every Story references at least one architecture artifact.
-- Every Story references at least one procedure, or explicitly states "No applicable procedure yet" with a flag to create one.
-- Out of Scope is mandatory. Never leave it empty.
-- Implementation steps are not included — those belong to Dev layer.
+- Use when: decomposing a feature or change request into one or more story artifacts.
+- Input: normalized feature description, relevant architecture artifacts, current procedure library, optional existing stories.
+- Output: story drafts in `STORY-<id>` format with ACs, references, dependencies, and out-of-scope definitions.
 
 ### SKILL: validate-process-consistency
 
-Run before writing any artifact. See validation section below.
+- Use when: applying the mandatory process write gate before persisting procedures/stories.
+- Input: architecture artifacts plus candidate procedures/stories and optional existing process artifacts.
+- Output: validation result (`pass`/`fail`) with blocking failures and warnings.
 
 ### SKILL: emit-change-request
 
-Generate a structured CR to Architecture layer.
-
-Use when:
-
-- A procedure or story reveals that the current architecture creates workflow complexity that cannot be resolved at the process level.
-
-Always set `type: "internal"`, `from_layer: "process"`, `to_layer: "architecture"`.
+- Use when: process analysis identifies architecture-level constraints that cannot be resolved in process artifacts.
+- Input: CR metadata (`type`, `from_layer`, `to_layer`) plus trigger, conflict, Chesterton context, impact, options, and recommendation.
+- Output: generated CR ID and CR file path under `spec/change-requests/`.
 
 ---
 
