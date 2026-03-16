@@ -68,8 +68,7 @@ flowchart LR
 		PDA --> DV[Developer]
 		PDA --> VD[Validator]
 		VD -. failure report .-> DV
-		DV -. change request .-> PDA
-		VD -. ambiguity request .-> PDA
+		DV -. feedback on story/procedure ambiguity .-> PDA
 		PDA -. architecture request .-> AR
 		AR -. boundary request .-> DA
 ```

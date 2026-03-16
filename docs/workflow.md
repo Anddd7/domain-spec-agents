@@ -16,7 +16,8 @@
 5. Process Design Assistant decomposes work into Task Specs with Given / When / Then acceptance criteria.
 6. Developer implements and writes unit tests.
 7. Validator executes black-box validation.
-8. If validation fails, a Change Request is raised to the correct upstream layer.
+8. If validation fails, Validator raises a bug Change Request to Developer first.
+9. Developer fixes the bug; if root cause is ambiguous Story/procedure or missing architecture constraint, Developer raises an upstream Change Request.
 
 ## Inter-Layer Feedback Protocol
 
