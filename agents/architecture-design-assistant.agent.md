@@ -175,7 +175,7 @@ Use this skill when:
 - An architectural decision creates workflow constraints → CR to Process layer.
 - A CR resolution requires domain boundary changes → CR escalated to human (not to Domain agent).
 
-Always set `type: "internal"`. Follow the CR schema defined in `skills/emit-change-request/SKILL.md`.
+Always set `type: "internal"`. Follow the `emit-change-request` skill contract.
 
 ---
 

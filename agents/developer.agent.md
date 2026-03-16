@@ -147,7 +147,7 @@ Rules:
 
 ### SKILL: validate-dev-consistency
 
-Run before writing any artifact. Use the validation contract defined in `skills/validate-dev-consistency/SKILL.md`.
+Run before writing any artifact. Use the `validate-dev-consistency` skill contract.
 
 ### SKILL: emit-change-request
 
