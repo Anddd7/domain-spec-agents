@@ -55,6 +55,8 @@ flowchart TB
 		TS --> VAL
 ```
 
+See [DomainSpec - Workflow](docs/workflow.md) for detailed examples of how the agents collaborate in each phase.
+
 ### Agent Interaction Relationship
 
 - Normal flow is top-down: Domain -> Architecture -> Process Spec -> Developer/Validator.
@@ -62,7 +64,7 @@ flowchart TB
 - No layer silently rewrites upstream intent.
 
 ```mermaid
-flowchart LR
+flowchart TD
 		DA[Domain Analysis Assistant] --> AR[Architecture Design Assistant]
 		AR --> PDA[Process Design Assistant]
 		PDA --> DV[Developer]
@@ -72,8 +74,6 @@ flowchart LR
 		PDA -. architecture request .-> AR
 		AR -. boundary request .-> DA
 ```
-
-See [Workflow](docs/workflow.md) for detailed iteration steps and inter-layer feedback protocol.
 
 ## Agents
 
